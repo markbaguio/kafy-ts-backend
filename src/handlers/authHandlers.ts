@@ -21,6 +21,7 @@ export async function signUpNewUser(request: Request, response: Response) {
     response
       .status(error.status || 500)
       .json({ error, message: error.message });
+    return;
   }
 
   // handle success
