@@ -1,7 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
+import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 
-export async function signUpNewUser(request: Request, response: Response) {
+export async function signUpNewUser(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
   //Extract user data from the request.body
   const { firstName, lastName, email, password } = request.body;
 
@@ -16,16 +21,18 @@ export async function signUpNewUser(request: Request, response: Response) {
     },
   });
 
-  // handle error.
+  // send error to handleErrorMiddleware which will handle all errors.
   if (error) {
-    response
-      .status(error.status || 500)
-      .json({ error, message: error.message });
+    next(error);
     return;
   }
 
   // handle success
-  response.status(200).json({
-    user: data,
-  });
+  const res: AuthenticationResponse = {
+    statusCode: 201,
+    data: data,
+    message: "User signed up successfully.",
+  };
+
+  response.status(res.statusCode).json(res);
 }
