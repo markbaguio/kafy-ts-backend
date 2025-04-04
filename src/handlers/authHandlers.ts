@@ -40,3 +40,14 @@ export async function signUpNewUser(
     next(err);
   }
 }
+
+export async function signInUser(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+  } catch (err) {
+    next(err);
+  }
+}
