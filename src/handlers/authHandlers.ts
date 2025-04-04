@@ -47,6 +47,26 @@ export async function signInUser(
   next: NextFunction
 ) {
   try {
+    const { email, password } = request.body;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    // handle success
+    const res: AuthenticationResponse = {
+      statusCode: 200,
+      data: data,
+      message: "User signed in successfully.",
+    };
+
+    response.status(res.statusCode).json(res);
   } catch (err) {
     next(err);
   }
