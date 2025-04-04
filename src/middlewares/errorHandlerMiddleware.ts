@@ -21,18 +21,25 @@ export function errorHandlerMiddleware(
     res.statusCode = 400;
     res.message = "Validation Error";
     res.error = error.flatten();
+    console.error(error);
   }
   //? Handle Supabase Auth Error(e.g., incorrect login, registration issues)
   else if (isAuthApiError(error)) {
     res.statusCode = error.status;
     res.message = error.message;
     res.error = error;
+    console.error(error);
   }
   //? Handle general errors(like internal server errors)
   else if (error instanceof Error) {
     res.statusCode = 500; //? 500 for Internal Server Error.
     res.message = error.message;
-    res.error = error;
+    res.error = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    };
+    console.error(error);
   }
   //? In case of unknown error
   else {

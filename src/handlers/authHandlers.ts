@@ -7,32 +7,36 @@ export async function signUpNewUser(
   response: Response,
   next: NextFunction
 ) {
-  //Extract user data from the request.body
-  const { firstName, lastName, email, password } = request.body;
+  try {
+    //Extract user data from the request.body
+    const { firstName, lastName, email, password } = request.body;
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        first_name: firstName,
-        last_name: lastName,
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+        },
       },
-    },
-  });
+    });
 
-  // send error to handleErrorMiddleware which will handle all errors.
-  if (error) {
-    next(error);
-    return;
+    // send error to handleErrorMiddleware which will handle all errors.
+    if (error) {
+      next(error);
+      return;
+    }
+
+    // handle success
+    const res: AuthenticationResponse = {
+      statusCode: 201,
+      data: data,
+      message: "User signed up successfully.",
+    };
+
+    response.status(res.statusCode).json(res);
+  } catch (err) {
+    next(err);
   }
-
-  // handle success
-  const res: AuthenticationResponse = {
-    statusCode: 201,
-    data: data,
-    message: "User signed up successfully.",
-  };
-
-  response.status(res.statusCode).json(res);
 }
