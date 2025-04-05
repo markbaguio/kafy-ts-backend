@@ -40,3 +40,34 @@ export async function signUpNewUser(
     next(err);
   }
 }
+
+export async function signInUser(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const { email, password } = request.body;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    // handle success
+    const res: AuthenticationResponse = {
+      statusCode: 200,
+      data: data,
+      message: "User signed in successfully.",
+    };
+
+    response.status(res.statusCode).json(res);
+  } catch (err) {
+    next(err);
+  }
+}
