@@ -17,5 +17,5 @@ app.use("/auth", authRouter);
 app.use(errorHandlerMiddleware);
 
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
