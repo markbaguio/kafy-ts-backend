@@ -21,7 +21,6 @@ export function setAuthCookies({
 
   //? Set cookies for access token and refresh token.
   response.cookie("access_token", accessToken, {
-    // domain: "http://localhost:5000",
     httpOnly: true,
     secure: false,
     sameSite: "lax",
@@ -29,7 +28,6 @@ export function setAuthCookies({
     path: "/", // cookie is valid for the entire domain
   });
   response.cookie("refresh_token", refreshToken, {
-    // domain: "http://localhost:5000",
     httpOnly: true,
     secure: false,
     sameSite: "lax",
