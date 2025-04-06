@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import authRouter from "./routes/auth";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -20,6 +21,3 @@ app.use(errorHandlerMiddleware);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-function cookieParser(): any {
-  throw new Error("Function not implemented.");
-}

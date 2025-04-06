@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
-import { Session, User } from "@supabase/supabase-js";
+import { setAuthCookies } from "../utils/setAuthCookies";
 
 export async function signUpNewUser(
   request: Request,
@@ -59,6 +59,12 @@ export async function signInUser(
       next(error);
       return;
     }
+    // send cookies to the client.
+    setAuthCookies({
+      response,
+      accessToken: data.session?.access_token!,
+      refreshToken: data.session?.refresh_token!,
+    });
 
     // handle success
     const res: AuthenticationResponse = {
@@ -105,6 +111,10 @@ export async function signOutUser(
       next(error);
       return;
     }
+
+    //? remove cookied when loging out.
+    response.clearCookie("access_token");
+    response.clearCookie("refresh_token");
 
     // handle success
     const res: ApiResponse<null> = {
