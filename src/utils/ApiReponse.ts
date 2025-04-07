@@ -20,4 +20,4 @@ export type ApiResponse<T> = {
 //       session: null;
 //     }
 // >;
-export type AuthenticationResponse = ApiResponse<User | null>;
+export type AuthenticationResponse = ApiResponse<User>;
