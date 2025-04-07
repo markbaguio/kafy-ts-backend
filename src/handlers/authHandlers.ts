@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 import { setAuthCookies } from "../utils/setAuthCookies";
+import { User } from "@supabase/supabase-js";
 
 export async function signUpNewUser(
   request: Request,
@@ -66,6 +67,8 @@ export async function signInUser(
       refreshToken: data.session?.refresh_token!,
     });
 
+    // console.log(response.getHeader("Set-Cookie")); //? for testing
+
     // handle success
     const res: AuthenticationResponse = {
       statusCode: 200,
@@ -126,5 +129,55 @@ export async function signOutUser(
     response.status(res.statusCode).json(res);
   } catch (err) {
     next(err);
+  }
+}
+
+export async function refreshToken(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const refreshToken: string = request.cookies.refresh_token;
+
+    if (!refreshToken) {
+      const res: ApiResponse<null> = {
+        statusCode: 400,
+        data: null,
+        message: "No refresh token found.",
+      };
+      response.status(401).json(res);
+      return;
+    }
+
+    // if refresh token is present, send it to the supabase client to get new access token.
+
+    const { data, error } = await supabaseClient.auth.refreshSession({
+      refresh_token: refreshToken,
+    });
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    // set cookies to the client if there are no errors.
+    setAuthCookies({
+      response,
+      accessToken: data.session?.access_token!,
+      refreshToken: data.session?.refresh_token!,
+    });
+
+    // console.log(response.getHeader("Set-Cookie")); //? for testing
+
+    const res: ApiResponse<User> = {
+      statusCode: 200,
+      data: data.user,
+      message: "Token refreshed successfully.",
+    };
+
+    response.status(res.statusCode).json(res);
+  } catch (error) {
+    next(error);
   }
 }

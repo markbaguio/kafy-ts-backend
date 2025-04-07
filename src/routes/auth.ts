@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  refreshToken,
   signInUser,
   signOutUser,
   signUpNewUser,
@@ -14,5 +15,7 @@ authRouter.post("/signup", validateSignUpRequestMiddleware, signUpNewUser);
 authRouter.post("/signin", validateSignInRequestMiddleware, signInUser);
 
 authRouter.post("/signout", signOutUser);
+
+authRouter.post("/refresh-token", refreshToken);
 
 export default authRouter;
