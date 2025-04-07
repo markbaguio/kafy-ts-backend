@@ -32,7 +32,7 @@ export async function signUpNewUser(
     // handle success
     const res: AuthenticationResponse = {
       statusCode: 201,
-      data: data,
+      data: data.user,
       message: "User signed up successfully.",
     };
 
@@ -69,7 +69,7 @@ export async function signInUser(
     // handle success
     const res: AuthenticationResponse = {
       statusCode: 200,
-      data: data,
+      data: data.user,
       message: "User signed in successfully.",
     };
 
