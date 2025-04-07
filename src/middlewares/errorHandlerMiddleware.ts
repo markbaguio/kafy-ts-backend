@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { ApiResponse } from "../utils/ApiReponse";
 import { ZodError } from "zod";
-import { isAuthApiError } from "@supabase/supabase-js";
+import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
 
 export function errorHandlerMiddleware(
   error: unknown,
@@ -26,6 +26,11 @@ export function errorHandlerMiddleware(
   //? Handle Supabase Auth Error(e.g., incorrect login, registration issues)
   else if (isAuthApiError(error)) {
     res.statusCode = error.status;
+    res.message = error.message;
+    res.error = error;
+    console.error(error);
+  } else if (isAuthError(error)) {
+    res.statusCode = error.status ?? 500;
     res.message = error.message;
     res.error = error;
     console.error(error);
