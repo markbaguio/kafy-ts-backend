@@ -34,7 +34,12 @@ export async function signUpNewUser(
     // get Profile
     const profile: Profile = await getProfile(data.user!.id);
 
-    // Set Cookies
+    // Set Cookies - send cookies to the client
+    setAuthCookies({
+      response,
+      accessToken: data.session?.access_token!,
+      refreshToken: data.session?.refresh_token!,
+    });
 
     // handle success
     const res: AuthenticationResponse = {
