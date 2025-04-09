@@ -3,6 +3,7 @@ import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 import { setAuthCookies } from "../utils/setAuthCookies";
 import { User } from "@supabase/supabase-js";
+import { getProfile, Profile } from "../database/Profile";
 
 export async function signUpNewUser(
   request: Request,
@@ -30,10 +31,16 @@ export async function signUpNewUser(
       return;
     }
 
+    // get Profile
+    const profile: Profile = await getProfile(data.user!.id);
+
+    // Set Cookies
+
     // handle success
     const res: AuthenticationResponse = {
       statusCode: 201,
-      data: data.user,
+      // data: data.user,
+      data: profile,
       message: "User signed up successfully.",
     };
 
@@ -60,6 +67,8 @@ export async function signInUser(
       next(error);
       return;
     }
+
+    const profile: Profile = await getProfile(data.user.id);
     // send cookies to the client.
     setAuthCookies({
       response,
@@ -72,7 +81,8 @@ export async function signInUser(
     // handle success
     const res: AuthenticationResponse = {
       statusCode: 200,
-      data: data.user,
+      // data: data.user,
+      data: profile,
       message: "User signed in successfully.",
     };
 
