@@ -1,12 +1,11 @@
-import { AuthError, AuthResponse, Session, User } from "@supabase/supabase-js";
-import { ZodError } from "zod";
 import { Profile } from "../database/Profile";
 
 export type ApiResponse<T> = {
   statusCode: number;
-  data: T | null;
+  data?: T | null;
+  errorName?: string;
   message?: string;
-  error?: unknown;
+  // error?: unknown;
 };
 
 //? Response for authentication (sign in and sign up)
