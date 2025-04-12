@@ -3,6 +3,8 @@ import { ApiResponse } from "../utils/ApiReponse";
 import { ZodError } from "zod";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
 
+// TODO: Create a getErrorMessage that will extract the message from ZodError, AuthApiError, Error or a string. Then send that to the front end as the message.
+
 export function errorHandlerMiddleware(
   error: unknown,
   request: Request,
@@ -19,7 +21,7 @@ export function errorHandlerMiddleware(
 
   //? Handle ZodError.
   if (error instanceof ZodError) {
-    res.statusCode = 400;
+    res.statusCode = 422;
     res.errorName = error.name;
     res.message = "Validation Error";
     // res.error = error.flatten();
