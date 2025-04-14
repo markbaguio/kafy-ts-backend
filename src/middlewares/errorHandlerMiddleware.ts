@@ -47,11 +47,11 @@ export function errorHandlerMiddleware(
     res.statusCode = 500; //? 500 for Internal Server Error.
     res.errorName = error.name;
     res.message = error.message;
-    // res.error = {
-    //   name: error.name,
-    //   message: error.message,
-    //   stack: error.stack,
-    // };
+    res.errorDetails = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    };
     console.error(error);
   }
   //? In case of unknown error
@@ -59,7 +59,7 @@ export function errorHandlerMiddleware(
     res.statusCode = 500;
     res.message = "An unknown error occurred.";
     res.errorName = "Error";
-    // res.error = { error: "Unkown Error" };
+    res.errorDetails = { error: "Unkown Error" };
   }
 
   response.status(res.statusCode).json(res);
