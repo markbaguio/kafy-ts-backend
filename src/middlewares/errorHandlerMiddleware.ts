@@ -16,7 +16,7 @@ export function errorHandlerMiddleware(
     statusCode: 500,
     message: "An unexpected error occurred.",
     errorName: "Error",
-    // error: null,
+    errorDetails: null,
   };
 
   //? Handle ZodError.
@@ -24,7 +24,7 @@ export function errorHandlerMiddleware(
     res.statusCode = 422;
     res.errorName = error.name;
     res.message = "Validation Error";
-    // res.error = error.flatten();
+    res.errorDetails = error.flatten();
     // res.error = error.format();
     console.error(error);
   }
@@ -33,13 +33,13 @@ export function errorHandlerMiddleware(
     res.statusCode = error.status;
     res.errorName = error.name;
     res.message = error.message;
-    // res.error = error;
+    res.errorDetails = error;
     console.error(error);
   } else if (isAuthError(error)) {
     res.statusCode = error.status ?? 500;
     res.errorName = res.errorName;
     res.message = error.message;
-    // res.error = error;
+    res.errorDetails = error;
     console.error(error);
   }
   //? Handle general errors(like internal server errors)
@@ -47,11 +47,11 @@ export function errorHandlerMiddleware(
     res.statusCode = 500; //? 500 for Internal Server Error.
     res.errorName = error.name;
     res.message = error.message;
-    // res.error = {
-    //   name: error.name,
-    //   message: error.message,
-    //   stack: error.stack,
-    // };
+    res.errorDetails = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    };
     console.error(error);
   }
   //? In case of unknown error
@@ -59,7 +59,7 @@ export function errorHandlerMiddleware(
     res.statusCode = 500;
     res.message = "An unknown error occurred.";
     res.errorName = "Error";
-    // res.error = { error: "Unkown Error" };
+    res.errorDetails = { error: "Unkown Error" };
   }
 
   response.status(res.statusCode).json(res);
