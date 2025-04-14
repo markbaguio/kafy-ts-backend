@@ -5,7 +5,7 @@ export type ApiResponse<T> = {
   data?: T | null;
   errorName?: string;
   message?: string;
-  // error?: unknown;
+  errorDetails?: unknown;
 };
 
 //? Response for authentication (sign in and sign up)
