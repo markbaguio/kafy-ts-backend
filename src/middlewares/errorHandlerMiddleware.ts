@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { ApiResponse } from "../utils/ApiReponse";
 import { ZodError } from "zod";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
+import { isNoSessionError } from "../utils/utils";
 
 // TODO: Create a getErrorMessage that will extract the message from ZodError, AuthApiError, Error or a string. Then send that to the front end as the message.
 
@@ -53,6 +54,14 @@ export function errorHandlerMiddleware(
       stack: error.stack,
     };
     console.error(error);
+  }
+  //? Handle if there is no session or no user signed in
+  else if (isNoSessionError(error)) {
+    res.statusCode = 400;
+    res.message = error.message;
+    res.errorName = error.errorName;
+    res.errorDetails = error.errorDetails;
+    console.error(Error(error.message));
   }
   //? In case of unknown error
   else {
