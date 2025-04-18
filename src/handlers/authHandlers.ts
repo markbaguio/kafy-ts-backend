@@ -102,20 +102,19 @@ export async function signOutUser(
   next: NextFunction
 ) {
   try {
-    const {
-      data: { user },
-    } = await supabaseClient.auth.getUser();
+    const { data } = await supabaseClient.auth.getSession();
 
     // check if user is signed in or not.
     // if user is not signed in, return error response.
-    if (!user) {
+    if (!data.session) {
       const res: ApiResponse<null> = {
         statusCode: 400,
         data: null,
         message: "No user currently signed in.",
+        errorName: "No_Session",
+        errorDetails: null,
       };
-      response.status(400).json(res);
-      console.log(Error("No user currently signed in."));
+      next(res);
       return;
     }
 
