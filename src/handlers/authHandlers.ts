@@ -129,8 +129,18 @@ export async function signOutUser(
     }
 
     //? remove cookied when loging out.
-    response.clearCookie("access_token");
-    response.clearCookie("refresh_token");
+    response.clearCookie("access_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+    });
+    response.clearCookie("refresh_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+    });
 
     // handle success
     const res: ApiResponse<null> = {
