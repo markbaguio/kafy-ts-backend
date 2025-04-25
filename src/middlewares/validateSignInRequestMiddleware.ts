@@ -11,10 +11,16 @@ export function validateSignInRequestMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  try {
-    signInSchema.parse(request.body);
-    next();
-  } catch (error) {
-    next(error);
+  // try {
+  //   signInSchema.parse(request.body);
+  //   next();
+  // } catch (error) {
+  //   next(error);
+  // }
+  const result = signInSchema.safeParse(request.body);
+  if (!result.success) {
+    next(result.error);
+    return;
   }
+  next();
 }

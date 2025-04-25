@@ -18,10 +18,16 @@ export function validateSignUpRequestMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  try {
-    signUpSchema.parse(request.body);
-    next();
-  } catch (error) {
-    next(error);
+  // try {
+  //   signUpSchema.parse(request.body);
+  //   next();
+  // } catch (error) {
+  //   next(error);
+  // }
+  const result = signUpSchema.safeParse(request.body);
+  if (!result.success) {
+    next(result.error);
+    return;
   }
+  next();
 }
