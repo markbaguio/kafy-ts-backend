@@ -16,7 +16,7 @@ export function errorHandlerMiddleware(
   let res: ApiResponse<null> = {
     statusCode: 500,
     message: "An unexpected error occurred.",
-    errorName: "Error",
+    // errorName: "Error",
     errorDetails: null,
   };
 
@@ -38,7 +38,7 @@ export function errorHandlerMiddleware(
     console.error(error);
   } else if (isAuthError(error)) {
     res.statusCode = error.status ?? 500;
-    res.errorName = res.errorName;
+    res.errorName = error.name;
     res.message = error.message;
     res.errorDetails = error;
     console.error(error);
