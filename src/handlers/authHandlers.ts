@@ -155,6 +155,15 @@ export async function signOutUser(
   }
 }
 
+/**
+ *
+ * @param request
+ * @param response
+ * @param next
+ * @returns fresh access token and refresh token
+ * ? This should be executed manually when the access token(httpOnly)
+ * ? in a request is invalid.
+ */
 export async function refreshToken(
   request: Request,
   response: Response,
@@ -197,6 +206,39 @@ export async function refreshToken(
       statusCode: 200,
       data: data.user,
       message: "Token refreshed successfully.",
+    };
+
+    response.status(res.statusCode).json(res);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getRefreshProfile(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const { data, error } = await supabaseClient.auth.getUser(
+      request.cookies["access_token"]
+    );
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    const profile: Profile = await getProfile(data.user.id);
+
+    if (!profile) {
+      next(error);
+      return;
+    }
+
+    const res: ApiResponse<Profile> = {
+      statusCode: 200,
+      data: profile,
     };
 
     response.status(res.statusCode).json(res);
