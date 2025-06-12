@@ -4,8 +4,6 @@ import { ZodError } from "zod";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
 import { isCustomApiError, isNoSessionError } from "../utils/utils";
 
-// TODO: Create a getErrorMessage that will extract the message from ZodError, AuthApiError, Error or a string. Then send that to the front end as the message.
-
 export function errorHandlerMiddleware(
   error: unknown,
   request: Request,
