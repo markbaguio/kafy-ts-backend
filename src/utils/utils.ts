@@ -1,3 +1,4 @@
+import { PostgrestError } from "@supabase/supabase-js";
 import { ApiResponse } from "./ApiReponse";
 import { CustomErrorName } from "./constants";
 import { CustomApiError } from "./CustomApiError";
@@ -30,5 +31,20 @@ export function isCustomApiError(error: unknown): error is CustomApiError {
     typeof error.errorName === "string" &&
     typeof error.message === "string" &&
     error instanceof CustomApiError
+  );
+}
+
+export function isPostgrestError(error: unknown): error is PostgrestError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    "details" in error &&
+    "hint" in error &&
+    "message" in error &&
+    typeof error.code === "string" &&
+    typeof error.details === "string" &&
+    typeof error.hint === "string" &&
+    typeof error.message === "string"
   );
 }

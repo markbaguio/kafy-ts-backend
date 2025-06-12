@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { ApiResponse } from "../utils/ApiReponse";
 import { ZodError } from "zod";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
-import { isCustomApiError, isNoSessionError } from "../utils/utils";
+import {
+  isCustomApiError,
+  isNoSessionError,
+  isPostgrestError,
+} from "../utils/utils";
 
 export function errorHandlerMiddleware(
   error: unknown,
@@ -45,6 +49,12 @@ export function errorHandlerMiddleware(
     res.errorName = error.errorName;
     res.message = error.message;
     // res.errorDetails = error.stack;
+    console.error(error);
+  } else if (isPostgrestError(error)) {
+    console.log("biiiiiilaaat");
+    res.statusCode = parseInt(error.code);
+    res.message = error.message;
+    res.errorDetails = error.details;
     console.error(error);
   }
   //? Handle general errors(like internal server errors)

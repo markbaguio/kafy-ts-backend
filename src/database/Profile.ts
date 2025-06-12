@@ -1,3 +1,4 @@
+import { PostgrestError } from "@supabase/supabase-js";
 import supabaseClient from "../utils/supabaseClient";
 import { Tables } from "./supabase";
 
@@ -12,7 +13,12 @@ export async function getProfile(id: string): Promise<Profile | null> {
     .maybeSingle();
 
   if (error) {
-    throw error;
+    throw new PostgrestError({
+      message: "test",
+      code: "1",
+      details: "test",
+      hint: "miau",
+    });
   }
 
   return data;
