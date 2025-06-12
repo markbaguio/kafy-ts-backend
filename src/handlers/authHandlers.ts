@@ -4,6 +4,8 @@ import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 import { setAuthCookies } from "../utils/setAuthCookies";
 import { User } from "@supabase/supabase-js";
 import { getProfile, Profile } from "../database/Profile";
+import { CustomApiError } from "../utils/CustomApiError";
+import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
 
 export async function signUpNewUser(
   request: Request,
@@ -32,7 +34,7 @@ export async function signUpNewUser(
     }
 
     // get Profile
-    const profile: Profile = await getProfile(data.user!.id);
+    const profile = await getProfile(data.user!.id);
 
     // Set Cookies - send cookies to the client
     setAuthCookies({
@@ -72,7 +74,7 @@ export async function signInUser(
       return;
     }
 
-    const profile: Profile = await getProfile(data.user.id);
+    const profile = await getProfile(data.user.id);
     // send cookies to the client.
     setAuthCookies({
       response,
@@ -229,11 +231,16 @@ export async function getRefreshProfile(
       return;
     }
 
-    const profile: Profile = await getProfile(data.user.id);
+    const profile: Profile | null = await getProfile(data.user.id);
 
     if (!profile) {
-      next(error);
-      return;
+      // next(error);
+      throw new CustomApiError(
+        404,
+        CustomErrorName.Profile_Not_Found,
+        CustomErrorMessage.Profile_Not_Found_Message
+      );
+      // return;
     }
 
     const res: ApiResponse<Profile> = {
