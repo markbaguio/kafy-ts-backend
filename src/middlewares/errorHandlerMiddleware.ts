@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { ApiResponse } from "../utils/ApiReponse";
 import { ZodError } from "zod";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
-import { isNoSessionError } from "../utils/utils";
+import { isCustomApiError, isNoSessionError } from "../utils/utils";
 
 // TODO: Create a getErrorMessage that will extract the message from ZodError, AuthApiError, Error or a string. Then send that to the front end as the message.
 
@@ -17,7 +17,7 @@ export function errorHandlerMiddleware(
     statusCode: 500,
     message: "An unexpected error occurred.",
     // errorName: "Error",
-    errorDetails: null,
+    // errorDetails: null,
   };
 
   //? Handle ZodError.
@@ -41,6 +41,12 @@ export function errorHandlerMiddleware(
     res.errorName = error.name;
     res.message = error.message;
     res.errorDetails = error;
+    console.error(error);
+  } else if (isCustomApiError(error)) {
+    res.statusCode = error.statusCode;
+    res.errorName = error.errorName;
+    res.message = error.message;
+    // res.errorDetails = error.stack;
     console.error(error);
   }
   //? Handle general errors(like internal server errors)
