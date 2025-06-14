@@ -51,7 +51,6 @@ export function errorHandlerMiddleware(
     // res.errorDetails = error.stack;
     console.error(error);
   } else if (isPostgrestError(error)) {
-    console.log("biiiiiilaaat");
     res.statusCode = parseInt(error.code);
     res.message = error.message;
     res.errorDetails = error.details;

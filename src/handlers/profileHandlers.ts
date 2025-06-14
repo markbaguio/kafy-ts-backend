@@ -40,3 +40,46 @@ export async function getUserProfile(
     next(error);
   }
 }
+
+//? BUG: responds with 200 but it doesn't update the record in the database. - FIXED
+//? PROBLEM: No RLS policy for updating profile.
+//? FIX: Create RLP policy to allow user to update their own profile.
+
+//? PROBLEM: updated_at in supabase is timestampz
+//? FIX: use new Date().toISOString()
+
+//! BUG: PostgrestError is not being handled in the error handler middleware.
+
+export async function updateProfile(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  // const updatedProfileInput: Profile = request.body;
+  const { id, ...data_input } = request.body;
+  console.log(id, data_input);
+
+  const updatedProfile = {
+    ...data_input,
+    updated_at: new Date().toISOString(),
+  };
+
+  console.log(updatedProfile);
+  try {
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      // .update(updatedProfileInput)
+      .update(updatedProfile)
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    response.json(data);
+  } catch (error) {
+    next(error);
+  }
+}
