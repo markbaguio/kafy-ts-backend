@@ -49,7 +49,7 @@ export async function getUserProfile(
 //? PROBLEM: updated_at in supabase is timestampz
 //? FIX: use new Date().toISOString()
 
-//! BUG: PostgrestError is not being handled in the error handler middleware.
+//? BUG: PostgrestError is not being handled in the error handler middleware. - FIXED
 
 export async function updateProfile(
   request: Request,
