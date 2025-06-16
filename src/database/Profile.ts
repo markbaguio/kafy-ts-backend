@@ -18,17 +18,3 @@ export async function getProfile(id: string): Promise<Profile | null> {
 
   return data;
 }
-
-// export async function getProfile(id: string): Promise<Profile> {
-//   const { data, error } = await supabaseClient
-//     .from("profiles")
-//     .select("*")
-//     .eq("id", id)
-//     .limit(1);
-
-//   if (error) {
-//     throw error;
-//   }
-
-//   return data[0];
-// }
