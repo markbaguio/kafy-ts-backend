@@ -5,8 +5,9 @@ import express from "express";
 import authRouter from "./routes/auth";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware";
 import cookieParser from "cookie-parser";
-import { AUTHROUTE } from "./utils/constants";
+import { AUTHROUTE, BASE_ROUTE } from "./utils/constants";
 import cors from "cors";
+import profileRouter from "./routes/profileRoute";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(
 );
 
 app.use(AUTHROUTE, authRouter);
+app.use(BASE_ROUTE, profileRouter);
 
 //? Error handlers - middleware
 app.use(errorHandlerMiddleware);
