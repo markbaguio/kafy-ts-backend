@@ -4,6 +4,7 @@ import { getProfile, Profile } from "../database/Profile";
 import { ApiResponse } from "../utils/ApiReponse";
 import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
 import { CustomApiError } from "../utils/CustomApiError";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export async function getUserProfile(
   request: Request,
@@ -55,16 +56,13 @@ export async function updateProfile(
   response: Response,
   next: NextFunction
 ) {
-  // const updatedProfileInput: Profile = request.body;
   const { id, ...data_input } = request.body;
-  console.log(id, data_input);
 
   const updatedProfile = {
     ...data_input,
     updated_at: new Date().toISOString(),
   };
 
-  console.log(updatedProfile);
   try {
     const { data, error } = await supabaseClient
       .from("profiles")
@@ -74,8 +72,7 @@ export async function updateProfile(
       .select();
 
     if (error) {
-      next(error);
-      return;
+      throw new PostgrestError({ ...error });
     }
 
     response.json(data);
