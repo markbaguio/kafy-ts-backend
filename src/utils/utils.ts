@@ -41,10 +41,6 @@ export function isPostgrestError(error: unknown): error is PostgrestError {
     "code" in error &&
     "details" in error &&
     "hint" in error &&
-    "message" in error &&
-    typeof error.code === "string" &&
-    typeof error.details === "string" &&
-    typeof error.hint === "string" &&
-    typeof error.message === "string"
+    "message" in error
   );
 }
