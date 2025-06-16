@@ -13,12 +13,7 @@ export async function getProfile(id: string): Promise<Profile | null> {
     .maybeSingle();
 
   if (error) {
-    throw new PostgrestError({
-      message: "test",
-      code: "1",
-      details: "test",
-      hint: "miau",
-    });
+    throw new PostgrestError({ ...error });
   }
 
   return data;
