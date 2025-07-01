@@ -9,15 +9,16 @@ export async function getMenu(
   next: NextFunction
 ) {
   try {
-    const { data, error } = await supabaseClient
+    const { data, count, error } = await supabaseClient
       .from("products")
-      .select("*")
+      .select("*", { count: "exact" })
       .range(0, 5);
 
     if (error) {
       next(error);
     }
 
+    console.log(count);
     const res: ApiResponse<Menu[]> = {
       statusCode: 200,
       data: data,
