@@ -3,6 +3,6 @@ import { getMenu } from "../handlers/menuHandlers";
 
 const menuRouter = Router();
 
-menuRouter.get("/menu/:page", getMenu);
+menuRouter.get("/menu", getMenu);
 
 export default menuRouter;
