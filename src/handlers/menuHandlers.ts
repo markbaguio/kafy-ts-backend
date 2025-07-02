@@ -3,11 +3,16 @@ import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
 import { Menu } from "../database/Menu";
 
+type MenuRouteParameters = {
+  page: number;
+};
+
 export async function getMenu(
-  request: Request,
+  request: Request<MenuRouteParameters>,
   response: Response,
   next: NextFunction
 ) {
+  console.log(request.params.page);
   try {
     const { data, count, error } = await supabaseClient
       .from("products")
@@ -18,7 +23,6 @@ export async function getMenu(
       next(error);
     }
 
-    console.log(count);
     const res: ApiResponse<Menu[]> = {
       statusCode: 200,
       data: data,
