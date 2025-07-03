@@ -37,6 +37,12 @@ export async function getMenu(
 
     const res: ApiResponse<Menu[]> = {
       statusCode: 200,
+      pagination: {
+        currentPage: Number(currentPage),
+        totalPages: totalPages,
+        totalItems: count || 0,
+        itemsPerPage: ITEMS_PER_PAGE,
+      },
       data: data,
     };
     response.json(res);
