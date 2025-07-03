@@ -30,11 +30,6 @@ export async function getMenu(
       next(error);
     }
 
-    console.log(`current page: ${currentPage}`);
-    console.log(`total items: ${count}`);
-    console.log(`items per page: ${ITEMS_PER_PAGE}`);
-    console.log(`total pages: ${totalPages}`);
-
     const res: ApiResponse<Menu[]> = {
       statusCode: 200,
       pagination: {
