@@ -5,6 +5,7 @@ type Pagination = {
   totalPages: number;
   totalItems: number;
   itemsPerPage: number;
+  hasNextPage: boolean;
 };
 
 export type ApiResponse<T> = {

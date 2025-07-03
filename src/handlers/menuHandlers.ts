@@ -37,6 +37,7 @@ export async function getMenu(
         totalPages: totalPages,
         totalItems: count || 0,
         itemsPerPage: ITEMS_PER_PAGE,
+        hasNextPage: currentPage < totalPages,
       },
       data: data,
     };
