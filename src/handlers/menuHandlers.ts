@@ -14,7 +14,7 @@ export async function getMenu(
   next: NextFunction
 ) {
   const currentPage = request.query.page || 1;
-  console.log(request.query.page);
+
   try {
     const { data, count, error } = await supabaseClient
       .from("products")
