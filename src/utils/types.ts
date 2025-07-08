@@ -26,3 +26,9 @@ export const ProfileSchema = z.object({
   email: z.string().email().nullish(),
   updated_at: z.string().nullable().nullish(),
 });
+
+export const MenuQueryParamsSchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+});
+
+export type MenuQueryParams = z.infer<typeof MenuQueryParamsSchema>;
