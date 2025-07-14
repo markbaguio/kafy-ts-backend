@@ -10,8 +10,6 @@ export async function getMenu(
   response: Response,
   next: NextFunction
 ) {
-  // const currentPage = request.query.page || 1;
-
   const parsedMenuQueryParams = MenuQueryParamsSchema.safeParse(request.query);
 
   if (!parsedMenuQueryParams.success) {
