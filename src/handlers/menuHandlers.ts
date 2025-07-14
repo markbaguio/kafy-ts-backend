@@ -5,12 +5,8 @@ import { Menu } from "../database/Menu";
 import { ITEMS_PER_PAGE } from "../utils/constants";
 import { MenuQueryParams, MenuQueryParamsSchema } from "../utils/types";
 
-type MenuRouteParameters = {
-  page: number;
-};
-
 export async function getMenu(
-  request: Request<{}, {}, {}, MenuRouteParameters>,
+  request: Request<{}, {}, {}, MenuQueryParams>,
   response: Response,
   next: NextFunction
 ) {
@@ -24,13 +20,27 @@ export async function getMenu(
   }
 
   try {
-    const { data, count, error } = await supabaseClient
+    // const { data, count, error } = await supabaseClient
+    //   .from("products")
+    //   .select("*", { count: "exact" })
+    //   .range(
+    //     (parsedMenuQueryParams.data.page - 1) * ITEMS_PER_PAGE,
+    //     parsedMenuQueryParams.data.page * ITEMS_PER_PAGE - 1
+    //   );
+
+    const from = (parsedMenuQueryParams.data.page - 1) * ITEMS_PER_PAGE;
+    const to = parsedMenuQueryParams.data.page * ITEMS_PER_PAGE - 1;
+
+    let query = supabaseClient
       .from("products")
       .select("*", { count: "exact" })
-      .range(
-        (parsedMenuQueryParams.data.page - 1) * ITEMS_PER_PAGE,
-        parsedMenuQueryParams.data.page * ITEMS_PER_PAGE - 1
-      );
+      .range(from, to);
+
+    if (parsedMenuQueryParams.data.category) {
+      query = query.eq("category", parsedMenuQueryParams.data.category);
+    }
+
+    const { data, count, error } = await query;
 
     const totalPages = count ? Math.ceil(count / ITEMS_PER_PAGE) : 0;
 
