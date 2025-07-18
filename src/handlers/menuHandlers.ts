@@ -26,8 +26,9 @@ export async function getMenu(
     //     parsedMenuQueryParams.data.page * ITEMS_PER_PAGE - 1
     //   );
 
-    const from = (parsedMenuQueryParams.data.page - 1) * ITEMS_PER_PAGE;
-    const to = parsedMenuQueryParams.data.page * ITEMS_PER_PAGE - 1;
+    const from =
+      (parseInt(parsedMenuQueryParams.data.page) - 1) * ITEMS_PER_PAGE;
+    const to = parseInt(parsedMenuQueryParams.data.page) * ITEMS_PER_PAGE - 1;
 
     let query = supabaseClient
       .from("products")
@@ -53,10 +54,11 @@ export async function getMenu(
         totalPages: totalPages,
         totalItems: count || 0,
         itemsPerPage: ITEMS_PER_PAGE,
-        hasNextPage: parsedMenuQueryParams.data.page < totalPages,
+        hasNextPage: parseInt(parsedMenuQueryParams.data.page) < totalPages,
       },
       data: data,
     };
+    console.log("Menu Response:", res);
     response.json(res);
   } catch (error) {
     next(error);
