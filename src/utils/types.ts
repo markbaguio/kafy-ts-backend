@@ -29,7 +29,7 @@ export const ProfileSchema = z.object({
 
 export const MenuQueryParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),
-  category: z.enum(["hot", "cold"]),
+  category: z.enum(["hot", "cold"]).default("hot"),
 });
 
 export type MenuQueryParams = z.infer<typeof MenuQueryParamsSchema>;
