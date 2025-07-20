@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
-import { PaginatedMenu } from "../database/Product";
+import { PaginatedProducts } from "../database/Product";
 import { ITEMS_PER_PAGE } from "../utils/constants";
 import { MenuQueryParams, MenuQueryParamsSchema } from "../utils/types";
 
@@ -47,7 +47,7 @@ export async function getMenu(
       next(error);
     }
 
-    const res: ApiResponse<PaginatedMenu> = {
+    const res: ApiResponse<PaginatedProducts> = {
       statusCode: 200,
       // pagination: {
       //   currentPage: Number(parsedMenuQueryParams.data.page),

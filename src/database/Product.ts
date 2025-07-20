@@ -3,7 +3,7 @@ import { Tables } from "./supabase";
 
 export type Products = Tables<"products">;
 
-export type PaginatedMenu = {
+export type PaginatedProducts = {
   products: Products[];
   pagination: Pagination;
 };
