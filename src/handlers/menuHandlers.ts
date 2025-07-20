@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
-import { Menu } from "../database/Menu";
+import { PaginatedMenu } from "../database/Product";
 import { ITEMS_PER_PAGE } from "../utils/constants";
 import { MenuQueryParams, MenuQueryParamsSchema } from "../utils/types";
 
@@ -47,16 +47,25 @@ export async function getMenu(
       next(error);
     }
 
-    const res: ApiResponse<Menu[]> = {
+    const res: ApiResponse<PaginatedMenu> = {
       statusCode: 200,
-      pagination: {
-        currentPage: Number(parsedMenuQueryParams.data.page),
-        totalPages: totalPages,
-        totalItems: count || 0,
-        itemsPerPage: ITEMS_PER_PAGE,
-        hasNextPage: parseInt(parsedMenuQueryParams.data.page) < totalPages,
+      // pagination: {
+      //   currentPage: Number(parsedMenuQueryParams.data.page),
+      //   totalPages: totalPages,
+      //   totalItems: count || 0,
+      //   itemsPerPage: ITEMS_PER_PAGE,
+      //   hasNextPage: parseInt(parsedMenuQueryParams.data.page) < totalPages,
+      // },
+      data: {
+        pagination: {
+          currentPage: Number(parsedMenuQueryParams.data.page),
+          totalPages: totalPages,
+          totalItems: count || 0,
+          itemsPerPage: ITEMS_PER_PAGE,
+          hasNextPage: parseInt(parsedMenuQueryParams.data.page) < totalPages,
+        },
+        products: data ?? [],
       },
-      data: data,
     };
     console.log("Menu Response:", res);
     response.json(res);

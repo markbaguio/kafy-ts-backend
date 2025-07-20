@@ -1,6 +1,6 @@
 import { Profile } from "../database/Profile";
 
-type Pagination = {
+export type Pagination = {
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -14,7 +14,6 @@ export type ApiResponse<T> = {
   errorName?: string;
   message?: string;
   errorDetails?: unknown;
-  pagination?: Pagination;
 };
 
 //? Response for authentication (sign in and sign up)
