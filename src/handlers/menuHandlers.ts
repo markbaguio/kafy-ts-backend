@@ -3,7 +3,7 @@ import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
 import { PaginatedProducts } from "../database/Product";
 import { ITEMS_PER_PAGE } from "../utils/constants";
-import { MenuQueryParams, MenuQueryParamsSchema } from "../utils/types";
+import { MenuQueryParams, MenuQueryParamsSchema } from "../schemas/MenuSchema";
 
 export async function getMenu(
   request: Request<{}, {}, {}, MenuQueryParams>,
