@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express";
-import { signUpSchema } from "../utils/types";
+import { SignUpSchema } from "../schemas/signUpSchema";
 
 export function validateSignUpRequestMiddleware(
   request: Request,
@@ -13,7 +13,7 @@ export function validateSignUpRequestMiddleware(
   // } catch (error) {
   //   next(error);
   // }
-  const result = signUpSchema.safeParse(request.body);
+  const result = SignUpSchema.safeParse(request.body);
   if (!result.success) {
     next(result.error);
     return;

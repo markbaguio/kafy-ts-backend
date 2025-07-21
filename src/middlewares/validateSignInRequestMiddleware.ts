@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express-serve-static-core";
-import { signInSchema } from "../utils/types";
+import { SignInSchema } from "../schemas/signInSchema";
 
 export function validateSignInRequestMiddleware(
   request: Request,
@@ -13,7 +13,7 @@ export function validateSignInRequestMiddleware(
   // } catch (error) {
   //   next(error);
   // }
-  const result = signInSchema.safeParse(request.body);
+  const result = SignInSchema.safeParse(request.body);
   if (!result.success) {
     next(result.error);
     return;
