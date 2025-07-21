@@ -1,9 +1,9 @@
 import { Pagination } from "../utils/ApiReponse";
 import { Tables } from "./supabase";
 
-export type Products = Tables<"products">;
+export type Product = Tables<"products">;
 
 export type PaginatedProducts = {
-  products: Products[];
+  products: Product[];
   pagination: Pagination;
 };
