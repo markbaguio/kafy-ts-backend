@@ -1,6 +1,6 @@
-import { Profile } from "../database/Profile";
+import { Profile } from "../database/types/Profile";
 
-export type Pagination = {
+export type CustomPagination = {
   currentPage: number;
   totalPages: number;
   totalItems: number;

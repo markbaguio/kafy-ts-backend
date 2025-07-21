@@ -1,6 +1,6 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import supabaseClient from "../utils/supabaseClient";
-import { Tables } from "./supabase";
+import { Tables } from "../supabase";
+import supabaseClient from "../../utils/supabaseClient";
 
 export type Profile = Tables<"profiles">;
 

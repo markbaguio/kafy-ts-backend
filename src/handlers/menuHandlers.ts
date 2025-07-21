@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
-import { PaginatedProducts } from "../database/Product";
 import { ITEMS_PER_PAGE } from "../utils/constants";
 import { MenuQueryParams, MenuQueryParamsSchema } from "../schemas/MenuSchema";
+import { PaginatedProducts } from "../database/types/Product";
 
 export async function getMenu(
   request: Request<{}, {}, {}, MenuQueryParams>,

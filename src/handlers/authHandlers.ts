@@ -3,9 +3,9 @@ import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 import { setAuthCookies } from "../utils/setAuthCookies";
 import { User } from "@supabase/supabase-js";
-import { getProfile, Profile } from "../database/Profile";
 import { CustomApiError } from "../utils/CustomApiError";
 import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
+import { getProfile, Profile } from "../database/types/Profile";
 
 export async function signUpNewUser(
   request: Request,

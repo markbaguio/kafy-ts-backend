@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
-import { getProfile, Profile } from "../database/Profile";
 import { ApiResponse } from "../utils/ApiReponse";
 import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
 import { CustomApiError } from "../utils/CustomApiError";
 import { PostgrestError } from "@supabase/supabase-js";
+import { getProfile, Profile } from "../database/types/Profile";
 
 export async function getUserProfile(
   request: Request,

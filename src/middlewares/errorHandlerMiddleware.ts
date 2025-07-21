@@ -8,7 +8,7 @@ import {
   isPostgrestError,
 } from "../utils/utils";
 import { CustomErrorName } from "../utils/constants";
-import { PostgrestErrorType } from "../database/PostgrestErrorType";
+import { PostgrestErrorType } from "../database/types/PostgrestErrorType";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
