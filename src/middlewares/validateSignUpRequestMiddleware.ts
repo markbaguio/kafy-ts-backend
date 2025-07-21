@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express";
-import { SignUpSchema } from "../schemas/signUpSchema";
+import { SignUpSchema } from "../schemas/SignUpSchema";
 
 export function validateSignUpRequestMiddleware(
   request: Request,
