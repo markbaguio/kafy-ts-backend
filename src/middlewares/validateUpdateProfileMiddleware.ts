@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express-serve-static-core";
-import { ProfileSchema } from "../utils/types";
+import { ProfileSchema } from "../schemas/ProfileSchema";
 
 // type UpdatedProfileInput = z.infer<typeof UpdatedProfileSchema>;
 
