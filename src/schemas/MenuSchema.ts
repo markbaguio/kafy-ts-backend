@@ -6,7 +6,7 @@ export const MenuQueryParamsSchema = z.object({
 });
 
 export const ProductDetailSchema = z.object({
-  product_id: z.number(),
+  product_id: z.string(),
 });
 
 export type MenuQueryParams = z.infer<typeof MenuQueryParamsSchema>;
