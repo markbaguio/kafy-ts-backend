@@ -5,4 +5,9 @@ export const MenuQueryParamsSchema = z.object({
   category: z.enum(["hot", "cold"]).default("hot"),
 });
 
+export const ProductDetailSchema = z.object({
+  product_id: z.number(),
+});
+
 export type MenuQueryParams = z.infer<typeof MenuQueryParamsSchema>;
+export type ProductDetailRequestParam = z.infer<typeof ProductDetailSchema>;
