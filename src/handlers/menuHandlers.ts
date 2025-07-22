@@ -2,12 +2,18 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
 import { ITEMS_PER_PAGE } from "../utils/constants";
-import { MenuQueryParams, MenuQueryParamsSchema } from "../schemas/MenuSchema";
-import { PaginatedProducts } from "../database/types/Product";
+import {
+  MenuQueryParams,
+  MenuQueryParamsSchema,
+  ProductDetailRequestParam,
+  ProductDetailSchema,
+} from "../schemas/MenuSchema";
+import { PaginatedProducts, Product } from "../database/types/Product";
 
 export async function getMenu(
   request: Request<{}, {}, {}, MenuQueryParams>,
-  response: Response,
+  response: Response<ApiResponse<PaginatedProducts>>,
+  // response: Response,
   next: NextFunction
 ) {
   const parsedMenuQueryParams = MenuQueryParamsSchema.safeParse(request.query);
@@ -49,13 +55,6 @@ export async function getMenu(
 
     const res: ApiResponse<PaginatedProducts> = {
       statusCode: 200,
-      // pagination: {
-      //   currentPage: Number(parsedMenuQueryParams.data.page),
-      //   totalPages: totalPages,
-      //   totalItems: count || 0,
-      //   itemsPerPage: ITEMS_PER_PAGE,
-      //   hasNextPage: parseInt(parsedMenuQueryParams.data.page) < totalPages,
-      // },
       data: {
         pagination: {
           currentPage: Number(parsedMenuQueryParams.data.page),
@@ -72,4 +71,37 @@ export async function getMenu(
   } catch (error) {
     next(error);
   }
+}
+
+export async function getProduct(
+  request: Request<ProductDetailRequestParam>,
+  response: Response<ApiResponse<Product>>,
+  next: NextFunction
+) {
+  const parsedProductDetailRequestParams = ProductDetailSchema.safeParse(
+    request.params
+  );
+
+  if (!parsedProductDetailRequestParams.success) {
+    next(parsedProductDetailRequestParams.error);
+    return;
+  }
+
+  const { data, error, status } = await supabaseClient
+    .from("products")
+    .select("*")
+    .eq("id", parseInt(parsedProductDetailRequestParams.data.product_id))
+    .single();
+
+  if (error) {
+    next(error);
+    return;
+  }
+
+  const res: ApiResponse<Product> = {
+    statusCode: status,
+    data: data ? data : null,
+  };
+
+  response.json(res);
 }
