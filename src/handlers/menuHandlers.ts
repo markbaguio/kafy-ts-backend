@@ -66,7 +66,7 @@ export async function getMenu(
         products: data ?? [],
       },
     };
-    console.log("Menu Response:", res);
+
     response.json(res);
   } catch (error) {
     next(error);
