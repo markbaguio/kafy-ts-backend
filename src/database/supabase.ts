@@ -83,6 +83,7 @@ export type Database = {
           price_at_purchase: number
           product_id: number
           product_name: string
+          product_size: Database["public"]["Enums"]["product_size"]
           quantity: number
         }
         Insert: {
@@ -92,6 +93,7 @@ export type Database = {
           price_at_purchase?: number
           product_id: number
           product_name: string
+          product_size?: Database["public"]["Enums"]["product_size"]
           quantity?: number
         }
         Update: {
@@ -101,6 +103,7 @@ export type Database = {
           price_at_purchase?: number
           product_id?: number
           product_name?: string
+          product_size?: Database["public"]["Enums"]["product_size"]
           quantity?: number
         }
         Relationships: [
@@ -228,6 +231,7 @@ export type Database = {
     Enums: {
       order_status: "orderPlaced" | "orderInProgress" | "completed"
       product_category: "hot" | "cold"
+      product_size: "S" | "M" | "L"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -360,6 +364,7 @@ export const Constants = {
     Enums: {
       order_status: ["orderPlaced", "orderInProgress", "completed"],
       product_category: ["hot", "cold"],
+      product_size: ["S", "M", "L"],
     },
   },
 } as const
