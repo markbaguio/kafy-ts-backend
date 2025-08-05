@@ -10,6 +10,12 @@ import cors from "cors";
 import profileRouter from "./routes/profileRoute";
 import menuRouter from "./routes/menu";
 
+/**
+ * ! TECHNICAL DEBT:
+ * ! 1. cookie maxAge does not reflect the real expiry date of supabase access token.
+ *
+ */
+
 const app = express();
 
 const PORT = process.env.PORT;
