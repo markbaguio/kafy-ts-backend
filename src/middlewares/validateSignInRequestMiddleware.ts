@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express-serve-static-core";
-import { SignInSchema } from "../schemas/signInSchema";
+import { SignInSchema } from "../schemas/SignInSchema";
 
 export function validateSignInRequestMiddleware(
   request: Request,
