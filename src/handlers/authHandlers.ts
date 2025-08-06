@@ -216,6 +216,7 @@ export async function refreshToken(
   }
 }
 
+//? This gets called on every refresh ensuring that the access_token is always new. Or should it only be called on protected routes.?
 export async function getRefreshProfile(
   request: Request,
   response: Response,
