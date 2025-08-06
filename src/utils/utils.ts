@@ -2,6 +2,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { ApiResponse } from "./ApiReponse";
 import { CustomErrorName } from "./constants";
 import { CustomApiError } from "./CustomApiError";
+import { OrderItem } from "../database/types/OrderItems";
 
 export function isNoSessionError(
   response: unknown
@@ -42,5 +43,24 @@ export function isPostgrestError(error: unknown): error is PostgrestError {
     "details" in error &&
     "hint" in error &&
     "message" in error
+  );
+}
+
+export function calculateOrderSubtotal(
+  orderItems: Pick<
+    OrderItem,
+    | "price_at_purchase"
+    | "product_id"
+    | "product_size"
+    | "quantity"
+    | "product_name"
+  >[]
+) {
+  if (orderItems.length <= 0) return 0;
+
+  return orderItems.reduce(
+    (accumulator, currentItem) =>
+      accumulator + currentItem.price_at_purchase * currentItem.quantity,
+    0
   );
 }
