@@ -1,8 +1,13 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { ApiResponse } from "./ApiReponse";
-import { CustomErrorName } from "./constants";
+import {
+  CustomErrorName,
+  DELIVERY_FEE_CONSTANT,
+  TAX_FEE_CONSTANT,
+} from "./constants";
 import { CustomApiError } from "./CustomApiError";
 import { OrderItem } from "../database/types/OrderItems";
+import { number } from "zod";
 
 export function isNoSessionError(
   response: unknown
@@ -63,4 +68,17 @@ export function calculateOrderSubtotal(
       accumulator + currentItem.price_at_purchase * currentItem.quantity,
     0
   );
+}
+
+export function calculateOrderTotal(
+  subtotal: number,
+  freeShippingThreshold: number,
+  tax: number = TAX_FEE_CONSTANT,
+  deliveryFee: number = DELIVERY_FEE_CONSTANT
+) {
+  if (subtotal === 0) return 0;
+
+  if (subtotal >= freeShippingThreshold) return subtotal + tax;
+
+  return subtotal + deliveryFee + tax;
 }
