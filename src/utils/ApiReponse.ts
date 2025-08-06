@@ -8,7 +8,7 @@ export type CustomPagination = {
   hasNextPage: boolean;
 };
 
-export type ApiResponse<T> = {
+export type ApiResponse<T = null> = {
   statusCode: number;
   data?: T | null;
   errorName?: string;
