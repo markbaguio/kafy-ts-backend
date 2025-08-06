@@ -9,6 +9,7 @@ import { AUTHROUTE, BASE_ROUTE } from "./utils/constants";
 import cors from "cors";
 import profileRouter from "./routes/profileRoute";
 import menuRouter from "./routes/menu";
+import orderRouter from "./routes/orders";
 
 /**
  * ! TECHNICAL DEBT:
@@ -34,6 +35,7 @@ app.use(
 app.use(AUTHROUTE, authRouter);
 app.use(BASE_ROUTE, profileRouter);
 app.use(BASE_ROUTE, menuRouter);
+app.use(BASE_ROUTE, orderRouter);
 
 //? Error handlers - middleware
 app.use(errorHandlerMiddleware);
