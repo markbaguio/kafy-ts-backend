@@ -16,14 +16,15 @@ import { ApiResponse } from "../utils/ApiReponse";
 
 /**
  * ? Handle the free shipping here on the backend.
+ * ? postOrder is a protected route. This must check if the access token is still valid before proceeding with the process.
  */
-
 export async function postOrder(
   request: Request,
   response: Response,
   next: NextFunction
 ) {
   try {
+    //TODO: Implement checking if the access token of the user is still valid before proceeding. If not may refresh the access token if the refresh token of the user is validm if not they MUST be redirected to the sign in page.
     const parsedPlaceOrderPayload = PlaceOrderPayloadSchema.safeParse(
       request.body
     );
@@ -97,9 +98,12 @@ export async function postOrder(
       return;
     }
 
-    const res: ApiResponse = {
+    const res: ApiResponse<Pick<Order, "id">> = {
       statusCode: 200,
       message: "Order has been placed successfully",
+      data: {
+        id: newOrderRecord.id,
+      },
     };
 
     response.json(res);
