@@ -24,7 +24,17 @@ export async function postOrder(
   next: NextFunction
 ) {
   try {
-    //TODO: Implement checking if the access token of the user is still valid before proceeding. If not may refresh the access token if the refresh token of the user is validm if not they MUST be redirected to the sign in page.
+    //? use access token from httpOnly cookie to check if the access token of the user is already expired.
+    const accessToken = request.cookies["access_token"];
+    const { data: tData, error: tError } = await supabaseClient.auth.getUser(
+      accessToken
+    );
+
+    if (tError) {
+      next(tError);
+      return;
+    }
+
     const parsedPlaceOrderPayload = PlaceOrderPayloadSchema.safeParse(
       request.body
     );
