@@ -59,7 +59,8 @@ export async function postOrder(
     //? get the profileID/userID using access token sent from the frontend.
     //? create newOrderRecord.
     const newOrder: Omit<Order, "id" | "created_at"> = {
-      profile_id: "fce5023b-4a71-41fb-b2c0-ced50f9e0e6f", //? mock for testing.
+      // profile_id: "fce5023b-4a71-41fb-b2c0-ced50f9e0e6f", //? mock for testing.
+      profile_id: tData.user.id,
       status: "orderPlaced",
       total_amount: orderTotal,
     };
