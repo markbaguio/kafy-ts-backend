@@ -3,9 +3,9 @@ import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse, AuthenticationResponse } from "../utils/ApiReponse";
 import { setAuthCookies } from "../utils/setAuthCookies";
 import { User } from "@supabase/supabase-js";
-import { getProfile, Profile } from "../database/Profile";
 import { CustomApiError } from "../utils/CustomApiError";
 import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
+import { getProfile, Profile } from "../database/types/Profile";
 
 export async function signUpNewUser(
   request: Request,
@@ -186,27 +186,28 @@ export async function refreshToken(
 
     // if refresh token is present, send it to the supabase client to get new access token.
 
-    const { data, error } = await supabaseClient.auth.refreshSession({
-      refresh_token: refreshToken,
-    });
+    const { data: refreshData, error: refreshError } =
+      await supabaseClient.auth.refreshSession({
+        refresh_token: refreshToken,
+      });
 
-    if (error) {
-      next(error);
+    if (refreshError) {
+      next(refreshError);
       return;
     }
 
     // set cookies to the client if there are no errors.
     setAuthCookies({
       response,
-      accessToken: data.session?.access_token!,
-      refreshToken: data.session?.refresh_token!,
+      accessToken: refreshData.session?.access_token!,
+      refreshToken: refreshData.session?.refresh_token!,
     });
 
     // console.log(response.getHeader("Set-Cookie")); //? for testing
 
     const res: ApiResponse<User> = {
       statusCode: 200,
-      data: data.user,
+      data: refreshData.user,
       message: "Token refreshed successfully.",
     };
 
@@ -216,6 +217,7 @@ export async function refreshToken(
   }
 }
 
+//? This gets called on every refresh ensuring that the access_token is always new. Or should it only be called on protected routes.?
 export async function getRefreshProfile(
   request: Request,
   response: Response,

@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express-serve-static-core";
-
-const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, "Password is required"),
-});
+import { SignInSchema } from "../schemas/SignInSchema";
 
 export function validateSignInRequestMiddleware(
   request: Request,
@@ -17,7 +13,7 @@ export function validateSignInRequestMiddleware(
   // } catch (error) {
   //   next(error);
   // }
-  const result = signInSchema.safeParse(request.body);
+  const result = SignInSchema.safeParse(request.body);
   if (!result.success) {
     next(result.error);
     return;

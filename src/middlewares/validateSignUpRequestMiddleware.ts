@@ -1,17 +1,6 @@
 import { z } from "zod";
 import { Response, Request, NextFunction } from "express";
-
-const signUpSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "First name is required"),
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, "Password must contain at least 8 characters")
-    .max(25, "Password must not exceed 25 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter."),
-});
+import { SignUpSchema } from "../schemas/SignUpSchema";
 
 export function validateSignUpRequestMiddleware(
   request: Request,
@@ -24,7 +13,7 @@ export function validateSignUpRequestMiddleware(
   // } catch (error) {
   //   next(error);
   // }
-  const result = signUpSchema.safeParse(request.body);
+  const result = SignUpSchema.safeParse(request.body);
   if (!result.success) {
     next(result.error);
     return;

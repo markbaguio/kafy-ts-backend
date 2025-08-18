@@ -1,6 +1,12 @@
 export const AUTHROUTE = "/auth";
 export const BASE_ROUTE = "/api";
 
+export const ITEMS_PER_PAGE = 10;
+
+export const FREE_SHIPPING_THRESHOLD = 450;
+export const DELIVERY_FEE_CONSTANT = 45;
+export const TAX_FEE_CONSTANT = 15;
+
 export enum CustomErrorName {
   No_Session = "No_Session",
   Profile_Not_Found = "Profile_Not_Found",

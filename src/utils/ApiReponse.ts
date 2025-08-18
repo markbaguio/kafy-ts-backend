@@ -1,6 +1,14 @@
-import { Profile } from "../database/Profile";
+import { Profile } from "../database/types/Profile";
 
-export type ApiResponse<T> = {
+export type CustomPagination = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+};
+
+export type ApiResponse<T = null> = {
   statusCode: number;
   data?: T | null;
   errorName?: string;

@@ -8,6 +8,14 @@ import cookieParser from "cookie-parser";
 import { AUTHROUTE, BASE_ROUTE } from "./utils/constants";
 import cors from "cors";
 import profileRouter from "./routes/profileRoute";
+import menuRouter from "./routes/menu";
+import orderRouter from "./routes/orders";
+
+/**
+ * ! TECHNICAL DEBT:
+ * ! 1. cookie maxAge does not reflect the real expiry date of supabase access token.
+ *
+ */
 
 const app = express();
 
@@ -26,6 +34,8 @@ app.use(
 
 app.use(AUTHROUTE, authRouter);
 app.use(BASE_ROUTE, profileRouter);
+app.use(BASE_ROUTE, menuRouter);
+app.use(BASE_ROUTE, orderRouter);
 
 //? Error handlers - middleware
 app.use(errorHandlerMiddleware);

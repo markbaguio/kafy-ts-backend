@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import supabaseClient from "../utils/supabaseClient";
-import { getProfile, Profile } from "../database/Profile";
 import { ApiResponse } from "../utils/ApiReponse";
 import { CustomErrorMessage, CustomErrorName } from "../utils/constants";
 import { CustomApiError } from "../utils/CustomApiError";
 import { PostgrestError } from "@supabase/supabase-js";
+import { getProfile, Profile } from "../database/types/Profile";
 
 export async function getUserProfile(
   request: Request,
@@ -41,15 +41,6 @@ export async function getUserProfile(
     next(error);
   }
 }
-
-//? BUG: responds with 200 but it doesn't update the record in the database. - FIXED
-//? PROBLEM: No RLS policy for updating profile.
-//? FIX: Create RLP policy to allow user to update their own profile.
-
-//? PROBLEM: updated_at in supabase is timestampz
-//? FIX: use new Date().toISOString()
-
-//? BUG: PostgrestError is not being handled in the error handler middleware. - FIXED
 
 export async function updateProfile(
   request: Request,

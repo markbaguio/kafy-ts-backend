@@ -4,6 +4,14 @@ import { Database } from "../database/supabase";
 const supabaseProjUrl: string = process.env.SUPABASE_PROJ_URL!;
 const supabaseAnonKey: string = process.env.SUPABASE_ANON_KEY!;
 
-const supabaseClient = createClient<Database>(supabaseProjUrl, supabaseAnonKey);
+const supabaseClient = createClient<Database>(
+  supabaseProjUrl,
+  supabaseAnonKey,
+  {
+    auth: {
+      autoRefreshToken: false,
+    },
+  }
+);
 
 export default supabaseClient;
