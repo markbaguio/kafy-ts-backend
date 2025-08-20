@@ -11,3 +11,18 @@ export const PlaceOrderPayloadSchema = z.object({
     })
   ),
 });
+
+const OrderStatusEnum = z.enum([
+  "orderPlaced",
+  "orderInProgress",
+  "completed",
+  "canceled",
+]);
+
+export const OrderSchema = z.object({
+  id: z.number(),
+  total_amount: z.number().nonnegative(),
+  status: OrderStatusEnum,
+  created_at: z.string().datetime(),
+  profile_id: z.string(),
+});
