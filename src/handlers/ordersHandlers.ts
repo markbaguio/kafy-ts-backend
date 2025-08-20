@@ -1,15 +1,27 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
-import { PlaceOrderPayloadSchema } from "../schemas/OrderSchema";
+import {
+  GetOrdersQueryParametersSchema,
+  GetOrdersRequestQueryParameters,
+  OrdersWithOrderItemsWithImageResponse,
+  OrdersWithOrderItemsWithImageSchemaArray,
+  PlaceOrderPayloadSchema,
+} from "../schemas/OrderSchema";
 import { calculateOrderSubtotal, calculateOrderTotal } from "../utils/utils";
 import {
   DELIVERY_FEE_CONSTANT,
   FREE_SHIPPING_THRESHOLD,
   TAX_FEE_CONSTANT,
 } from "../utils/constants";
-import { Order } from "../database/types/Order";
+import {
+  Order,
+  OrderItemsWithImage,
+  OrdersWithOrderItemsWithImage,
+  RawOrdersWithOrderItemsWithImage,
+} from "../database/types/Order";
 import { OrderItem } from "../database/types/OrderItems";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
+import { QueryData } from "@supabase/supabase-js";
 
 //! TECHNICAL DEBT: Use supabase RPC(PostgresSQL function) to implement some kind of TRANSACTIONAL SAFETY. RPC ensures that partial failures which leads to data inconsistency won't happen.
 //! TEMPORARY FIX: query the orphaned data (order without order_items or order_items without order) then delete them. This is not a fix and should be implemented before scaling further.
@@ -120,5 +132,107 @@ export async function postOrder(
     response.json(res);
   } catch (error) {
     next(error);
+  }
+}
+
+export async function getOrders(
+  request: Request<GetOrdersRequestQueryParameters>,
+  response: Response<ApiResponse<OrdersWithOrderItemsWithImageResponse[]>>,
+  next: NextFunction
+) {
+  try {
+    const parsedGetOrdersQueryParams = GetOrdersQueryParametersSchema.safeParse(
+      request.query
+    );
+
+    const accessToken: string = request.cookies["access_token"];
+
+    const orderStatus =
+      parsedGetOrdersQueryParams.data?.status ?? "orderPlaced";
+
+    const { data: userData, error: userDataError } =
+      await supabaseClient.auth.getUser(accessToken);
+
+    if (userDataError) {
+      next(userDataError);
+      return;
+    }
+
+    //? The resulting data of this query has the type of RawOrdersWithOrderItemsWithImage, which is used to type the parameter of mapOrdersWithOrderItemsWithImage.
+    //? This query will return the orders of the user with the order items and the image URL of the product.
+    const ordersWithOrderItemsQuery = supabaseClient
+      .from("orders")
+      .select(
+        `
+        id, 
+        total_amount, 
+        profile_id,
+        status, 
+        created_at,
+        order_items (
+          id, 
+          order_id,
+          product_id,
+          product_name,
+          price_at_purchase,
+          quantity,
+          product_size,
+          created_at,
+          products (
+            id,
+            image_url
+          )
+        ) 
+        `
+      )
+      .eq("profile_id", userData.user.id)
+      .eq("status", orderStatus)
+      .order("created_at", { ascending: false });
+
+    //? You can get the type of the data returned by the query using QueryData utility type from supabase-js. However, this can only be used within this block as it needs the query to infer the type.
+    // type OrderWithOrderItems = QueryData<typeof ordersWithOrderItemsQuery>;
+
+    const { data, error, status } = await ordersWithOrderItemsQuery;
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    const flattenOrdersWithOrderItems: OrdersWithOrderItemsWithImage[] =
+      data.map((order) => ({
+        ...order,
+        order_items: order.order_items.map(
+          ({ products, ...rest }): OrderItemsWithImage => ({
+            ...rest,
+            image_url: products?.image_url ?? null,
+          })
+        ),
+      }));
+
+    const parsedOrdersWithOrderItemsWithImage =
+      OrdersWithOrderItemsWithImageSchemaArray.safeParse(
+        flattenOrdersWithOrderItems
+      );
+
+    if (!parsedOrdersWithOrderItemsWithImage.success) {
+      next(parsedOrdersWithOrderItemsWithImage.error);
+      return;
+    }
+
+    // const flattenOrdersWithOrderItems = mapOrdersWithOrderItemsWithImage(data);
+
+    // const res: ApiResponse<RawOrdersWithOrderItemsWithImage[]> = {
+    //   statusCode:
+    // }
+    const res: ApiResponse<OrdersWithOrderItemsWithImageResponse[]> = {
+      statusCode: status,
+      data: parsedOrdersWithOrderItemsWithImage.data,
+    };
+
+    response.json(res);
+  } catch (error) {
+    next(error);
+    return;
   }
 }
