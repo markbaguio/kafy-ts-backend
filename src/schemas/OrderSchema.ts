@@ -23,6 +23,6 @@ export const OrderSchema = z.object({
   id: z.number(),
   total_amount: z.number().nonnegative(),
   status: OrderStatusEnum,
-  created_at: z.string().datetime(),
+  created_at: z.string(),
   profile_id: z.string(),
 });

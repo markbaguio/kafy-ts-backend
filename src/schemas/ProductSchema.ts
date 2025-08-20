@@ -4,8 +4,8 @@ const ProductCategoryEnum = z.enum(["hot", "cold"]);
 
 const ProductSchema = z.object({
   id: z.number(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_at: z.string(),
+  updated_at: z.string(),
   name: z.string(),
   description: z.string(),
   is_available: z.boolean(),
