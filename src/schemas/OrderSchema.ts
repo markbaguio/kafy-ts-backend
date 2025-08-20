@@ -39,3 +39,11 @@ export const OrdersWithOrderItemsWithImageSchemaArray = z.array(
 export type OrdersWithOrderItemsWithImageResponse = z.infer<
   typeof OrdersWithOrderItemsWithImageSchema
 >;
+
+export const GetOrdersQueryParametersSchema = z.object({
+  status: OrderStatusEnum,
+});
+
+export type GetOrdersRequestQueryParameters = z.infer<
+  typeof GetOrdersQueryParametersSchema
+>;
