@@ -36,6 +36,6 @@ export const OrdersWithOrderItemsWithImageSchemaArray = z.array(
   OrdersWithOrderItemsWithImageSchema
 );
 
-export type OrdersWithOrderItemsWithImageReponse = z.infer<
+export type OrdersWithOrderItemsWithImageResponse = z.infer<
   typeof OrdersWithOrderItemsWithImageSchema
 >;
