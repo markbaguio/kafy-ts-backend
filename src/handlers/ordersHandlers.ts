@@ -136,7 +136,7 @@ export async function postOrder(
 }
 
 export async function getOrders(
-  request: Request<GetOrdersRequestQueryParameters>,
+  request: Request<{}, {}, {}, GetOrdersRequestQueryParameters>,
   response: Response<ApiResponse<OrdersWithOrderItemsWithImageResponse[]>>,
   next: NextFunction
 ) {
@@ -145,10 +145,14 @@ export async function getOrders(
       request.query
     );
 
+    if (!parsedGetOrdersQueryParams.success) {
+      next(parsedGetOrdersQueryParams.error);
+      return;
+    }
+
     const accessToken: string = request.cookies["access_token"];
 
-    const orderStatus =
-      parsedGetOrdersQueryParams.data?.status ?? "orderPlaced";
+    const orderStatus = parsedGetOrdersQueryParams.data?.status;
 
     const { data: userData, error: userDataError } =
       await supabaseClient.auth.getUser(accessToken);
