@@ -7,7 +7,10 @@ import {
 } from "./constants";
 import { CustomApiError } from "./CustomApiError";
 import { OrderItem } from "../database/types/OrderItems";
-import { number } from "zod";
+import {
+  OrderItemsWithImage,
+  RawOrdersWithOrderItemsWithImage,
+} from "../database/types/Order";
 
 export function isNoSessionError(
   response: unknown
@@ -81,4 +84,18 @@ export function calculateOrderTotal(
   if (subtotal >= freeShippingThreshold) return subtotal + tax;
 
   return subtotal + deliveryFee + tax;
+}
+
+export function mapOrdersWithOrderItemsWithImage(
+  data: RawOrdersWithOrderItemsWithImage[]
+) {
+  return data?.map((order) => ({
+    ...order,
+    order_items: order.order_items.map(
+      ({ products, ...rest }): OrderItemsWithImage => ({
+        ...rest,
+        image_url: products?.image_url ?? null,
+      })
+    ),
+  }));
 }
