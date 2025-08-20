@@ -10,3 +10,7 @@ export const OrderItemSchema = z.object({
   quantity: z.number().min(1),
   product_size: z.enum(["S", "M", "L"]),
 });
+
+export const OrderItemWithImageSchema = OrderItemSchema.extend({
+  image_url: z.string(),
+});
