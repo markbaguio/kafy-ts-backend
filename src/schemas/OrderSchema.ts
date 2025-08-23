@@ -1,5 +1,8 @@
 import z from "zod";
-import { OrderItemWithImageSchema } from "./OrderItemSchema";
+import {
+  OrderItemWithImageAndCategorySchema,
+  OrderItemWithImageSchema,
+} from "./OrderItemSchema";
 
 export const PlaceOrderPayloadSchema = z.object({
   order_items: z.array(
@@ -38,6 +41,19 @@ export const OrdersWithOrderItemsWithImageSchemaArray = z.array(
 
 export type OrdersWithOrderItemsWithImageResponse = z.infer<
   typeof OrdersWithOrderItemsWithImageSchema
+>;
+
+export const OrdersWithOrderItemsWithImageAndCategorySchema =
+  OrderSchema.extend({
+    order_items: z.array(OrderItemWithImageAndCategorySchema),
+  });
+
+export const OrdersWithOrderItemsWithImageAndCategorySchemaArray = z.array(
+  OrdersWithOrderItemsWithImageAndCategorySchema
+);
+
+export type OrdersWithOrderItemsWithImageAndCategoryResponse = z.infer<
+  typeof OrdersWithOrderItemsWithImageAndCategorySchema
 >;
 
 export const GetOrdersQueryParametersSchema = z.object({
