@@ -1,6 +1,6 @@
 import z from "zod";
 
-const ProductCategoryEnum = z.enum(["hot", "cold"]);
+export const ProductCategoryEnum = z.enum(["hot", "cold"]);
 
 export const ProductSchema = z.object({
   id: z.number(),
