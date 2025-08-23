@@ -1,4 +1,5 @@
 import z from "zod";
+import { ProductCategoryEnum } from "./ProductSchema";
 
 export const OrderItemSchema = z.object({
   id: z.number(),
@@ -13,4 +14,9 @@ export const OrderItemSchema = z.object({
 
 export const OrderItemWithImageSchema = OrderItemSchema.extend({
   image_url: z.string(),
+});
+
+export const OrderItemWithImageAndCategorySchema = OrderItemSchema.extend({
+  image_url: z.string(),
+  category: ProductCategoryEnum,
 });
