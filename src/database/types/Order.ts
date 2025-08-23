@@ -5,9 +5,15 @@ import { Product } from "./Product";
 export type Order = Tables<"orders">;
 
 export type OrderItemsWithImage = OrderItem & Pick<Product, "image_url">;
+export type OrderItemsWithImageAndCategory = OrderItem &
+  Pick<Product, "image_url" | "category">;
 
-export type OrdersWithOrderItemsWithImage = Order & {
+export type OrderWithOrderItemsWithImage = Order & {
   order_items: OrderItemsWithImage[];
+};
+
+export type OrderWithOrderItemsWithImageAndCategory = Order & {
+  order_items: OrderItemsWithImageAndCategory[];
 };
 
 export type RawOrdersWithOrderItemsWithImage = Order & {
