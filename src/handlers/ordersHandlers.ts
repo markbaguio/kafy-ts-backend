@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import {
   GetOrdersQueryParametersSchema,
   GetOrdersRequestQueryParameters,
+  OrdersWithOrderItemsWithImageAndCategoryResponse,
+  OrdersWithOrderItemsWithImageAndCategorySchemaArray,
   OrdersWithOrderItemsWithImageResponse,
   OrdersWithOrderItemsWithImageSchemaArray,
   PlaceOrderPayloadSchema,
@@ -15,7 +17,9 @@ import {
 import {
   Order,
   OrderItemsWithImage,
-  OrdersWithOrderItemsWithImage,
+  OrderItemsWithImageAndCategory,
+  OrderWithOrderItemsWithImage,
+  OrderWithOrderItemsWithImageAndCategory,
   RawOrdersWithOrderItemsWithImage,
 } from "../database/types/Order";
 import { OrderItem } from "../database/types/OrderItems";
@@ -184,7 +188,8 @@ export async function getOrders(
           created_at,
           products (
             id,
-            image_url
+            image_url,
+            category
           )
         ) 
         `
@@ -203,36 +208,54 @@ export async function getOrders(
       return;
     }
 
-    const flattenOrdersWithOrderItems: OrdersWithOrderItemsWithImage[] =
+    const flattenOrdersWithOrderItems: OrderWithOrderItemsWithImageAndCategory[] =
       data.map((order) => ({
         ...order,
         order_items: order.order_items.map(
-          ({ products, ...rest }): OrderItemsWithImage => ({
+          ({ products, ...rest }): OrderItemsWithImageAndCategory => ({
             ...rest,
-            image_url: products?.image_url ?? null,
+            image_url: products.image_url,
+            category: products.category,
+            // image_url: products?.image_url ?? null,
+            // category: products.category,
           })
         ),
       }));
 
-    const parsedOrdersWithOrderItemsWithImage =
-      OrdersWithOrderItemsWithImageSchemaArray.safeParse(
+    // const parsedOrdersWithOrderItemsWithImage =
+    //   OrdersWithOrderItemsWithImageSchemaArray.safeParse(
+    //     flattenOrdersWithOrderItems
+    //   );
+
+    // if (!parsedOrdersWithOrderItemsWithImage.success) {
+    //   next(parsedOrdersWithOrderItemsWithImage.error);
+    //   return;
+    // }
+
+    const parsedOrdersWithOrderItemsWithImageAndCategory =
+      OrdersWithOrderItemsWithImageAndCategorySchemaArray.safeParse(
         flattenOrdersWithOrderItems
       );
 
-    if (!parsedOrdersWithOrderItemsWithImage.success) {
-      next(parsedOrdersWithOrderItemsWithImage.error);
+    if (!parsedOrdersWithOrderItemsWithImageAndCategory.success) {
+      next(parsedOrdersWithOrderItemsWithImageAndCategory.error);
       return;
     }
-
     // const flattenOrdersWithOrderItems = mapOrdersWithOrderItemsWithImage(data);
 
     // const res: ApiResponse<RawOrdersWithOrderItemsWithImage[]> = {
     //   statusCode:
     // }
-    const res: ApiResponse<OrdersWithOrderItemsWithImageResponse[]> = {
-      statusCode: status,
-      data: parsedOrdersWithOrderItemsWithImage.data,
-    };
+    // const res: ApiResponse<OrdersWithOrderItemsWithImageResponse[]> = {
+    //   statusCode: status,
+    //   data: parsedOrdersWithOrderItemsWithImage.data,
+    // };
+
+    const res: ApiResponse<OrdersWithOrderItemsWithImageAndCategoryResponse[]> =
+      {
+        statusCode: status,
+        data: parsedOrdersWithOrderItemsWithImageAndCategory.data,
+      };
 
     response.json(res);
   } catch (error) {
