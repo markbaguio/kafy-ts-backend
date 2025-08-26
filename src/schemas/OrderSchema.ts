@@ -57,7 +57,7 @@ export type OrdersWithOrderItemsWithImageAndCategoryResponse = z.infer<
 >;
 
 export const GetOrdersQueryParametersSchema = z.object({
-  status: OrderStatusEnum,
+  status: OrderStatusEnum.or(z.literal("")),
 });
 
 export type GetOrdersRequestQueryParameters = z.infer<
