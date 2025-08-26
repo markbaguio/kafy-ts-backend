@@ -9,7 +9,7 @@ import { CustomApiError } from "./CustomApiError";
 import { OrderItem } from "../database/types/OrderItems";
 import {
   OrderItemsWithImage,
-  OrdersWithOrderItemsWithImage,
+  OrderWithOrderItemsWithImage,
   RawOrdersWithOrderItemsWithImage,
 } from "../database/types/Order";
 
@@ -89,7 +89,7 @@ export function calculateOrderTotal(
 
 export function mapOrdersWithOrderItemsWithImage(
   data: RawOrdersWithOrderItemsWithImage[]
-): OrdersWithOrderItemsWithImage[] {
+): OrderWithOrderItemsWithImage[] {
   return data?.map((order) => ({
     ...order,
     order_items: order.order_items.map(
