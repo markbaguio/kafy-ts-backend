@@ -52,7 +52,7 @@ export const OrdersWithOrderItemsWithImageAndCategorySchemaArray = z.array(
   OrdersWithOrderItemsWithImageAndCategorySchema
 );
 
-export type OrdersWithOrderItemsWithImageAndCategoryResponse = z.infer<
+export type OrderWithOrderItemsWithImageAndCategoryResponse = z.infer<
   typeof OrdersWithOrderItemsWithImageAndCategorySchema
 >;
 
@@ -62,4 +62,12 @@ export const GetOrdersQueryParametersSchema = z.object({
 
 export type GetOrdersRequestQueryParameters = z.infer<
   typeof GetOrdersQueryParametersSchema
+>;
+
+export const GetLatestOrdersQueryParametersSchema = z.object({
+  limit: z.coerce.number().positive().min(1).default(1),
+});
+
+export type GetLatestOrdersQueryParameters = z.infer<
+  typeof GetLatestOrdersQueryParametersSchema
 >;
