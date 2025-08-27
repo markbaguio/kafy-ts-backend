@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import {
+  GetLatestOrdersQueryParameters,
+  GetLatestOrdersQueryParametersSchema,
   GetOrdersQueryParametersSchema,
   GetOrdersRequestQueryParameters,
-  OrdersWithOrderItemsWithImageAndCategoryResponse,
+  OrderWithOrderItemsWithImageAndCategoryResponse,
   OrdersWithOrderItemsWithImageAndCategorySchemaArray,
   OrdersWithOrderItemsWithImageResponse,
   OrdersWithOrderItemsWithImageSchemaArray,
@@ -251,7 +253,7 @@ export async function getOrders(
     //   data: parsedOrdersWithOrderItemsWithImage.data,
     // };
 
-    const res: ApiResponse<OrdersWithOrderItemsWithImageAndCategoryResponse[]> =
+    const res: ApiResponse<OrderWithOrderItemsWithImageAndCategoryResponse[]> =
       {
         statusCode: status,
         data: parsedOrdersWithOrderItemsWithImageAndCategory.data,
@@ -261,5 +263,102 @@ export async function getOrders(
   } catch (error) {
     next(error);
     return;
+  }
+}
+
+export async function getLatestOrders(
+  request: Request<{}, {}, {}, GetLatestOrdersQueryParameters>,
+  response: Response<ApiResponse<OrdersWithOrderItemsWithImageResponse[]>>,
+  next: NextFunction
+) {
+  try {
+    const accessToken: string = request.cookies["access_token"];
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser(accessToken);
+
+    if (userError) {
+      next(userError);
+      return;
+    }
+
+    const parsedGetLatestQueryParams =
+      GetLatestOrdersQueryParametersSchema.safeParse(request.query);
+
+    if (!parsedGetLatestQueryParams.success) {
+      next(parsedGetLatestQueryParams.error);
+      return;
+    }
+
+    let getLatestOrdersQuery = supabaseClient
+      .from("orders")
+      .select(
+        `
+        id,
+        total_amount,
+        profile_id,
+        status,
+        created_at,
+        order_items (
+          id,
+          order_id,
+          product_id,
+          product_name,
+          price_at_purchase,
+          quantity,
+          product_size,
+          created_at,
+          products (
+            id,
+            image_url,
+            category
+          )
+        )
+        `
+      )
+      .eq("profile_id", userData.user.id)
+      .limit(parsedGetLatestQueryParams.data.limit)
+      .order("created_at", { ascending: false });
+
+    const {
+      data: latestOrdersQueryData,
+      error: latestOrdersQueryError,
+      status,
+    } = await getLatestOrdersQuery;
+
+    if (latestOrdersQueryError) {
+      next(latestOrdersQueryError);
+      return;
+    }
+
+    const flattenLatestOrdersWithOrderItemsWithImageAndCategory: OrderWithOrderItemsWithImageAndCategory[] =
+      latestOrdersQueryData.map((latestOrder) => ({
+        ...latestOrder,
+        order_items: latestOrder.order_items.map(
+          ({ products, ...rest }): OrderItemsWithImageAndCategory => ({
+            ...rest,
+            image_url: products.image_url,
+            category: products.category,
+          })
+        ),
+      }));
+
+    const parsedLatestOrdersWithOrderItemsWithImageAndCategory =
+      OrdersWithOrderItemsWithImageAndCategorySchemaArray.safeParse(
+        flattenLatestOrdersWithOrderItemsWithImageAndCategory
+      );
+
+    if (!parsedLatestOrdersWithOrderItemsWithImageAndCategory.success) {
+      next(parsedLatestOrdersWithOrderItemsWithImageAndCategory.error);
+      return;
+    }
+
+    const res: ApiResponse<OrderWithOrderItemsWithImageAndCategoryResponse[]> =
+      {
+        statusCode: status,
+        data: parsedLatestOrdersWithOrderItemsWithImageAndCategory.data,
+      };
+    response.json(res);
+  } catch (error) {
+    next(error);
   }
 }
