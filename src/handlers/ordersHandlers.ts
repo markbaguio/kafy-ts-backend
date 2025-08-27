@@ -195,19 +195,11 @@ export async function getOrders(
         `
       )
       .eq("profile_id", userData.user.id)
-      // .eq("status", orderStatus)
+      .eq("status", orderStatus)
       .order("created_at", { ascending: false });
 
     //? You can get the type of the data returned by the query using QueryData utility type from supabase-js. However, this can only be used within this block as it needs the query to infer the type.
     // type OrderWithOrderItems = QueryData<typeof ordersWithOrderItemsQuery>;
-
-    //? if status is "" query all orders.
-    if (orderStatus !== "") {
-      ordersWithOrderItemsQuery = ordersWithOrderItemsQuery.eq(
-        "status",
-        orderStatus
-      );
-    }
 
     const { data, error, status } = await ordersWithOrderItemsQuery;
 
