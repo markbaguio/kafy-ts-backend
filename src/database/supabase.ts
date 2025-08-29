@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -22,10 +22,10 @@ export type Database = {
     Functions: {
       graphql: {
         Args: {
+          extensions?: Json
           operationName?: string
           query?: string
           variables?: Json
-          extensions?: Json
         }
         Returns: Json
       }
@@ -229,7 +229,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      order_status: "orderPlaced" | "orderInProgress" | "completed"
+      order_status: "orderPlaced" | "orderInProgress" | "completed" | "canceled"
       product_category: "hot" | "cold"
       product_size: "S" | "M" | "L"
     }
@@ -362,7 +362,7 @@ export const Constants = {
   },
   public: {
     Enums: {
-      order_status: ["orderPlaced", "orderInProgress", "completed"],
+      order_status: ["orderPlaced", "orderInProgress", "completed", "canceled"],
       product_category: ["hot", "cold"],
       product_size: ["S", "M", "L"],
     },
