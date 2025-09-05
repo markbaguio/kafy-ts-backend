@@ -21,6 +21,6 @@ export async function getProfile(id: string): Promise<Profile | null> {
   return data;
 }
 
-export type AddToFavoritesParameters = z.infer<
+export type AddToFavoritesRequestBody = z.infer<
   typeof addToFavoritesParametersSchema
 >;
