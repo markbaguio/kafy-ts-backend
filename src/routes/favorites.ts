@@ -4,3 +4,5 @@ import { addToFavorites } from "../handlers/favoriteHandlers";
 const favoritesRouter = Router();
 
 favoritesRouter.post("/favorites", addToFavorites);
+
+export default favoritesRouter;
