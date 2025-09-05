@@ -1,4 +1,5 @@
 import z from "zod";
+import { addToFavorites } from "../handlers/favoriteHandlers";
 
 export const ProductCategoryEnum = z.enum(["hot", "cold"]);
 
@@ -13,3 +14,5 @@ export const ProductSchema = z.object({
   price: z.number().nonnegative(),
   image_url: z.string(),
 });
+
+export const addToFavoritesParametersSchema = ProductSchema.pick({ id: true });
