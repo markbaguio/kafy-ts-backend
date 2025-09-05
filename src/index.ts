@@ -10,7 +10,7 @@ import cors from "cors";
 import profileRouter from "./routes/profileRoute";
 import menuRouter from "./routes/menu";
 import orderRouter from "./routes/orders";
-
+import favoritesRouter from "./routes/favorites";
 /**
  * ! TECHNICAL DEBT:
  * ! 1. cookie maxAge does not reflect the real expiry date of supabase access token.
@@ -36,6 +36,7 @@ app.use(AUTHROUTE, authRouter);
 app.use(BASE_ROUTE, profileRouter);
 app.use(BASE_ROUTE, menuRouter);
 app.use(BASE_ROUTE, orderRouter);
+app.use(BASE_ROUTE, favoritesRouter);
 
 //? Error handlers - middleware
 app.use(errorHandlerMiddleware);
