@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { addToFavorites } from "../handlers/favoriteHandlers";
+import {
+  addToFavorites,
+  getUserFavoriteProducts,
+} from "../handlers/favoriteHandlers";
 
 const favoritesRouter = Router();
 
 favoritesRouter.post("/favorites", addToFavorites);
+favoritesRouter.get("/favorites", getUserFavoriteProducts);
 
 export default favoritesRouter;
