@@ -3,11 +3,8 @@ import { AddToFavoritesRequestBody } from "../database/types/Profile";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
 import { addToFavoritesParametersSchema } from "../schemas/ProductSchema";
-import {
-  AddToFavorite,
-  AddToFavoriteSchema,
-  FavoriteSchema,
-} from "../schemas/FavoriteSchema";
+import { AddToFavorite, FavoriteSchema } from "../schemas/FavoriteSchema";
+import { Favorite } from "../database/types/Favorite";
 
 export async function addToFavorites(
   request: Request<{}, any, AddToFavoritesRequestBody, {}>, //? the fourth one is the query params
@@ -78,6 +75,47 @@ export async function addToFavorites(
         user_id: newFavoriteData.user_id,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUserFavoriteProducts(
+  request: Request,
+  response: Response<ApiResponse<Pick<Favorite, "product_id">[]>>,
+  next: NextFunction
+) {
+  try {
+    const accessToken = request.cookies["access_token"];
+
+    const { data: userData, error: userDataError } =
+      await supabaseClient.auth.getUser(accessToken);
+
+    if (userDataError) {
+      next(userDataError);
+      return;
+    }
+
+    const {
+      data: favoritesData,
+      error: favoritesDataError,
+      status: favoritesDataStatus,
+    } = await supabaseClient
+      .from("favorites")
+      .select("product_id")
+      .eq("user_id", userData.user.id);
+
+    if (favoritesDataError) {
+      next(favoritesDataError);
+      return;
+    }
+
+    const res: ApiResponse<Pick<Favorite, "product_id">[]> = {
+      statusCode: favoritesDataStatus,
+      data: favoritesData,
+    };
+
+    response.json(res);
   } catch (error) {
     next(error);
   }
