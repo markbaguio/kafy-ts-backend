@@ -13,3 +13,5 @@ export const AddToFavoriteSchema = FavoriteSchema.pick({
 });
 
 export type AddToFavorite = z.infer<typeof AddToFavoriteSchema>;
+
+export type AddToFavotireResponse = AddToFavorite;

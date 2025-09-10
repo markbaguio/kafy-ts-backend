@@ -3,12 +3,16 @@ import { AddToFavoritesRequestBody } from "../database/types/Profile";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
 import { addToFavoritesParametersSchema } from "../schemas/ProductSchema";
-import { AddToFavorite, FavoriteSchema } from "../schemas/FavoriteSchema";
+import {
+  AddToFavorite,
+  AddToFavotireResponse,
+  FavoriteSchema,
+} from "../schemas/FavoriteSchema";
 import { Favorite } from "../database/types/Favorite";
 
 export async function addToFavorites(
   request: Request<{}, any, AddToFavoritesRequestBody, {}>, //? the fourth one is the query params
-  response: Response<ApiResponse<AddToFavorite>>,
+  response: Response<ApiResponse<AddToFavotireResponse>>,
   next: NextFunction
 ) {
   try {
