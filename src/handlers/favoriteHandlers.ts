@@ -84,7 +84,7 @@ export async function addToFavorites(
   }
 }
 
-export async function getUserFavoriteProducts(
+export async function getUserFavorites(
   request: Request,
   response: Response<ApiResponse<Pick<Favorite, "product_id">[]>>,
   next: NextFunction
