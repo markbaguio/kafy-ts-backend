@@ -17,4 +17,6 @@ export const ProductSchema = z.object({
 
 export const addToFavoritesParametersSchema = ProductSchema.pick({ id: true });
 
-export const removeFavoriteParameterSchema = addToFavoritesParametersSchema;
+export const removeFavoritePathParameterSchema = z.object({
+  product_id: z.string().transform((value) => parseInt(value, 10)),
+});
