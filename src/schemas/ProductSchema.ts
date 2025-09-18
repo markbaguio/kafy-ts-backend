@@ -16,3 +16,5 @@ export const ProductSchema = z.object({
 });
 
 export const addToFavoritesParametersSchema = ProductSchema.pick({ id: true });
+
+export const removeFavoriteParameterSchema = addToFavoritesParametersSchema;
