@@ -2,11 +2,16 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { AddToFavoritesRequestBody } from "../database/types/Profile";
 import supabaseClient from "../utils/supabaseClient";
 import { ApiResponse } from "../utils/ApiReponse";
-import { addToFavoritesParametersSchema } from "../schemas/ProductSchema";
+import {
+  addToFavoritesParametersSchema,
+  removeFavoritePathParameterSchema,
+} from "../schemas/ProductSchema";
 import {
   AddToFavorite,
   AddToFavotireResponse,
   FavoriteSchema,
+  RemoveFavoritePathParam,
+  RemoveFavoriteResponse,
 } from "../schemas/FavoriteSchema";
 import { Favorite } from "../database/types/Favorite";
 
@@ -117,6 +122,73 @@ export async function getUserFavorites(
     const res: ApiResponse<Pick<Favorite, "product_id">[]> = {
       statusCode: favoritesDataStatus,
       data: favoritesData,
+    };
+
+    response.json(res);
+  } catch (error) {
+    next(error);
+  }
+}
+
+//? All path parameters are strings. Transform them later.
+
+export async function removeFavorite(
+  request: Request<RemoveFavoritePathParam, {}, {}, {}>,
+  response: Response<ApiResponse<RemoveFavoriteResponse>>,
+  next: NextFunction
+) {
+  try {
+    const accessToken = request.cookies["access_token"];
+
+    // console.log(
+    //   "path parameter: ",
+    //   request.params.product_id,
+    //   typeof request.params.product_id
+    // );
+
+    const { data: userData, error: userDataError } =
+      await supabaseClient.auth.getUser(accessToken);
+
+    if (userDataError) {
+      next(userDataError);
+      return;
+    }
+
+    const parsedPathParameter = removeFavoritePathParameterSchema.safeParse(
+      request.params
+    );
+
+    if (!parsedPathParameter.success) {
+      next(parsedPathParameter.error);
+      return;
+    }
+
+    // console.log(
+    //   "parsed path parameter: ",
+    //   parsedPathParameter.data.product_id,
+    //   typeof parsedPathParameter.data.product_id
+    // );
+
+    const {
+      data: deletedFavoriteData,
+      error,
+      status: deleteStatus,
+    } = await supabaseClient
+      .from("favorites")
+      .delete()
+      .eq("user_id", userData.user.id)
+      .eq("product_id", parsedPathParameter.data.product_id)
+      .select()
+      .single();
+
+    if (error) {
+      next(error);
+      return;
+    }
+
+    const res: ApiResponse<RemoveFavoriteResponse> = {
+      statusCode: deleteStatus,
+      data: deletedFavoriteData,
     };
 
     response.json(res);
