@@ -15,3 +15,5 @@ export const AddToFavoriteSchema = FavoriteSchema.pick({
 export type AddToFavorite = z.infer<typeof AddToFavoriteSchema>;
 
 export type AddToFavotireResponse = AddToFavorite;
+
+export type RemoveFavoriteRequestBody = Pick<AddToFavorite, "product_id">;
